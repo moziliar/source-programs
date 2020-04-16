@@ -26,6 +26,11 @@
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.149.tgz#1342d63d948c6062838fbf961012f74d4e638440"
   integrity sha512-ijGqzZt/b7BfzcK9vTrS6MFljQRPn5BFWOx8oE0GYxribu6uV+aA9zZuXI1zc/etK9E8nrgdoF2+LgUw7+9tJQ==
 
+ace-builds@^1.4.9:
+  version "1.4.9"
+  resolved "https://registry.yarnpkg.com/ace-builds/-/ace-builds-1.4.9.tgz#2b9b020706871f30e97f5510af891149f144d3d8"
+  integrity sha512-6I+uUDsj9AKu45VgJvloplr2DtGXRxsXNfdV9TypDkDi9MBiIV+oRNFJAf0g1b42Er3fgaVzMbLBxCeJQYNtSA==
+
 acorn-loose@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/acorn-loose/-/acorn-loose-7.0.0.tgz#a4a6e8d2ae51dd5a8bdbc274b7ce3dd84964d13a"
@@ -73,14 +78,15 @@ jest-html-reporter@^2.8.2:
     strip-ansi "3.0.1"
     xmlbuilder "13.0.2"
 
-js-slang@^0.4.30:
-  version "0.4.30"
-  resolved "https://registry.yarnpkg.com/js-slang/-/js-slang-0.4.30.tgz#56e6c6f25e57581547ab10bb97841cef821a19b6"
-  integrity sha512-NeS3RWqVh5n+x3NbxCjUoprbm9Yfwk3CWyja+ykGyFAAY3+HytbUjJmLAnK40aHUWbmM0+IWWtX995hwQVQs9w==
+js-slang@^0.4.31:
+  version "0.4.31"
+  resolved "https://registry.yarnpkg.com/js-slang/-/js-slang-0.4.31.tgz#7426b03f3a8dd3845f8a4bcea8414473ed37e22e"
+  integrity sha512-PuJzo7q0ohU8ha7odMjOY0MXdQq+hdBZTXMfn58rGyPmHWHIiLfK60BVLDnONNxoRxzySRBpKEbN/qTbXt5DDw==
   dependencies:
     "@types/estree" "0.0.39"
     "@types/lodash.assignin" "^4.2.6"
     "@types/lodash.clonedeep" "^4.5.6"
+    ace-builds "^1.4.9"
     acorn "^6.4.1"
     acorn-loose "^7.0.0"
     acorn-walk "^7.0.0"
@@ -89,6 +95,7 @@ js-slang@^0.4.30:
     lodash "^4.17.13"
     node-getopt "^0.3.2"
     source-map "^0.7.3"
+    xmlhttprequest-ts "^1.0.1"
 
 lodash@^4.17.13:
   version "4.17.15"
@@ -124,7 +131,19 @@ strip-ansi@3.0.1:
   dependencies:
     ansi-regex "^2.0.0"
 
+tslib@^1.9.2:
+  version "1.11.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.11.1.tgz#eb15d128827fbee2841549e171f45ed338ac7e35"
+  integrity sha512-aZW88SY8kQbU7gpV19lN24LtXh/yD4ZZg6qieAJDDg+YBsJcSmLGK9QpnUjAKVG/xefmvJGd1WUmfpT/g6AJGA==
+
 xmlbuilder@13.0.2:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-13.0.2.tgz#02ae33614b6a047d1c32b5389c1fdacb2bce47a7"
   integrity sha512-Eux0i2QdDYKbdbA6AM6xE4m6ZTZr4G4xF9kahI2ukSEMCzwce2eX9WlTI5J3s+NU7hpasFsr8hWIONae7LluAQ==
+
+xmlhttprequest-ts@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/xmlhttprequest-ts/-/xmlhttprequest-ts-1.0.1.tgz#7b3cb4a197aee38cf2d4f9dd6189d1d21f0835b2"
+  integrity sha1-ezy0oZeu44zy1PndYYnR0h8INbI=
+  dependencies:
+    tslib "^1.9.2"

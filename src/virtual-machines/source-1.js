@@ -1378,16 +1378,15 @@ print_program(P);
 run();
 */
 
-/*
 P = parse_and_compile("         \
 function factorial(n) {         \
     return n === 1 ? 1          \
         : n * factorial(n - 1); \
 }                               \
-factorial(4);                   ");
+factorial(10);                   ");
 //print_program(P);
 run();
-*/
+show_heap("");
 
 /*
 P = parse_and_compile("         \
@@ -1433,7 +1432,7 @@ recurse(2, 3, h, 128);                                      ");
 run();
 */
 
-
+/*
 P = parse_and_compile("                         \
 function abs(x) {                               \
     return x >= 0 ? x : 0 - x;                  \

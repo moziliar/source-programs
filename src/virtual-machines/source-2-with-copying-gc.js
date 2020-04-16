@@ -59,13 +59,13 @@ function is_undefined_expression(stmt) {
 // and have "name" and "value" properties
 
 function is_constant_declaration(stmt) {
-   return is_tagged_list(stmt, "constant_declaration");
+    return is_tagged_list(stmt, "constant_declaration");
 }
 function constant_declaration_name(stmt) {
-   return head(tail(head(tail(stmt))));
+    return head(tail(head(tail(stmt))));
 }
 function constant_declaration_value(stmt) {
-   return head(tail(tail(stmt)));
+    return head(tail(tail(stmt)));
 }
 
 // applications are tagged with "application"
@@ -985,8 +985,7 @@ function parse_and_compile(string) {
             max_stack_size =
             compile_function_definition(expr, index_table);
         } else if (is_name(expr)) {
-            add_binary_instruction(LD, 
-                                   index_of(index_table, name_of_name(expr)), 
+            add_binary_instruction(LD, index_of(index_table, name_of_name(expr)), 
                                    env_to_lookup(index_table, name_of_name(expr)));
             max_stack_size = 1;
         } else if (is_sequence(expr)) {
@@ -1081,6 +1080,10 @@ function parse_and_compile_and_run(heapsize, string) {
 let P = [];
 // PC is program counter: index of the next instruction
 let PC = -Infinity;
+// HEAP is array containing all dynamically allocated data structures
+let HEAP = NaN;
+// next free slot in heap
+let FREE = -Infinity;
 // OS is address of current environment in HEAP; initially a dummy value
 let ENV = -Infinity;
 // OS is address of current operand stack in HEAP; initially a dummy value
@@ -1097,7 +1100,6 @@ let RUNNING = NaN;
 
 // exit state: NORMAL, DIV_ERROR, OUT_OF_MEMORY_ERROR, etc
 let STATE = NaN;
-
 // some general-purpose registers
 let A = 0;
 let B = 0;
@@ -1106,12 +1108,12 @@ let D = 0;
 let E = 0;
 let F = 0;
 let G = 0;
+let H = 0;
 let I = 0;
 let J = 0;
 let K = 0;
 let L = 0;
 let N = 0;
-let H = 0;
 
 function show_executing(s) {
     display(undefined, "--- RUN ---" + s);
@@ -1143,10 +1145,6 @@ function show_registers(s) {
     display(TOP_RTS, "TOP_RTS:");
 }
 
-// HEAP is array containing all dynamically allocated data structures
-let HEAP = NaN;
-// next free slot in heap
-let FREE = -Infinity;
 // scan pointer in Cheney
 let SCAN = -Infinity;
 // the size of the heap is fixed
@@ -1174,6 +1172,7 @@ let SPACESIZE = -Infinity;
 let TOSPACE = -Infinity;
 let FROMSPACE = -Infinity;
 let TOPOFSPACE = -Infinity;
+let GC_COUNT = 0;
 
 function initialize_machine(heapsize) {
     // display(heapsize, "\nRunning VM with heap size:");
@@ -1205,7 +1204,7 @@ function NEW() {
     J = A;
     K = B;
     if (FREE + K > TOPOFSPACE) {
-        display(FREE, "Flip! FREE:");
+        GC_COUNT = GC_COUNT + 1;
         FLIP();
     } else {}
     if (FREE + K > TOPOFSPACE) {
@@ -1570,7 +1569,7 @@ function POP_RTS() {
 const ENV_TAG = -102;
 const PARENT_ENVIRONMENT_SLOT = 4;
 
-// expects number of env entries in A
+// expects number of env entries in A, env to extend in E
 // changes B
 function NEW_ENVIRONMENT() {
     C = A;
@@ -1579,7 +1578,7 @@ function NEW_ENVIRONMENT() {
     NEW();
     HEAP[RES + FIRST_CHILD_SLOT] = 4;
     HEAP[RES + LAST_CHILD_SLOT] = 4 + C;
-    HEAP[RES + PARENT_ENVIRONMENT_SLOT] = ENV;
+    HEAP[RES + PARENT_ENVIRONMENT_SLOT] = E;
 }
 
 // debugging: show current heap
@@ -1614,7 +1613,7 @@ function show_heap(s) {
 
 function show_heap_value(address) {
     if (node_kind(HEAP[address])=== "pair") {
-        return  "result: heap node of type = " +
+        return "result: heap node of type = " +
                        node_kind(HEAP[address]) + ", value = " +
                        show_pair_value(address);
     } else {
@@ -1892,6 +1891,8 @@ M[CALL] = () =>    { G = P[PC + 1];  // lets keep number of arguments in G
                      // H is now the first child slot of the environment
                      A = HEAP[F + CLOSURE_ENV_EXTENSION_COUNT_SLOT];
                      // A is now the environment extension count
+                     E = HEAP[F + CLOSURE_ENV_SLOT];
+                     // E is now the environmnet to extend
                      NEW_ENVIRONMENT(); // after this, RES is new env
                      E = RES;
                      H = E + H + G;
@@ -1920,6 +1921,8 @@ M[CALLVAR] = () =>  { G = P[PC + 1];  // lets keep number of arguments in G
                      A = HEAP[F + CLOSURE_ENV_EXTENSION_COUNT_SLOT] + G - 1;
                      // A is now the environment extension count
                      // NOTE: -1 to ignore the placeholder variable
+                     E = HEAP[F + CLOSURE_ENV_SLOT];
+                     // E is now the environmnet to extend
                      NEW_ENVIRONMENT(); // after this, RES is new env
                      E = RES;
                      H = E + H + G;
@@ -2071,6 +2074,6 @@ function run() {
         error(RES, "memory exhausted despite garbage collection");
     } else {
         POP_OS();
-        return show_heap_value(RES);
+        return show_heap_value(RES) + "; GC count: " + stringify(GC_COUNT);
     }
 }
